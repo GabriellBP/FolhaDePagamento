@@ -7,14 +7,16 @@ public abstract class  Empregado {
     private String tipo;
     private int metodoPagamento;/*1-Cheque pelos correios; 2-Cheque em mãos; 3-Depósito em conta bancária*/
     private boolean sindicato;/*true-Empregado pertence ao sindicato; false-Empregado não pertence ao sindicato*/
+    private double salario;
 
-    public Empregado(int id, String nome, String endereco, int metodoPagamento, boolean sindicato, String tipo) {
+    public Empregado(int id, String nome, String endereco, int metodoPagamento, boolean sindicato, String tipo, double salario) {
         this.id = id;
         this.nome = nome;
         this.endereco = endereco;
         this.metodoPagamento = metodoPagamento;
         this.sindicato = sindicato;
         this.tipo = tipo;
+        this.salario = salario;
     }
         
     public int getId() {
@@ -65,4 +67,12 @@ public abstract class  Empregado {
         this.sindicato = sindicato;
     }
     
+    public double getSalario() {
+        return salario;
+    }
+
+    public void setSalario(double salario) {
+        this.salario = salario;
+    }
+
 }

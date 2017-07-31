@@ -1,8 +1,12 @@
 package folhadepagamento;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
     
@@ -58,13 +62,102 @@ public class Main {
                 comissionados.add(new Comissionado(qtdEmpregados, nome, endereco, pagamento, sindicato, "Comissionado", salario, comissao));
                 break;
             case 4:
-                return 0;
+                return 2;
             default:
                 limpaTela();
                 System.out.println("Escolha um tipo válido!");
                 return 1;
         }
         qtdEmpregados++;
+        return 0;
+    }
+    
+    public static int removerEmpregado(){
+        limpaTela();
+        System.out.println("Digite o tipo do empregado:\n1-Assalariado;\n2- Horista\n3-Comissionado:\n4-Cancelar");
+        int tipo = leitor.nextInt();
+        leitor.nextLine();
+        System.out.println("Empregados listados nessa categoria:");
+        int id;
+        switch(tipo){
+            case 1:
+                for(int i = 0; i<assalariados.size(); i++){
+                    System.out.println("Id: "+assalariados.get(i).getId()+" Nome: "+assalariados.get(i).getNome());
+                }
+                System.out.println("Digite o id do empregado a ser removido:");
+                id = leitor.nextInt();
+                leitor.nextLine();
+                for(int i = 0; i<assalariados.size(); i++){
+                    if(assalariados.get(i).getId() == id){
+                        assalariados.remove(i);
+                        return 0;
+                    }
+                }
+                break;
+            case 2:
+                for(int i = 0; i<horistas.size(); i++){
+                    System.out.println("Id: "+horistas.get(i).getId()+" Nome: "+horistas.get(i).getNome());
+                }
+                System.out.println("Digite o id do empregado a ser removido:");
+                id = leitor.nextInt();
+                leitor.nextLine();
+                for(int i = 0; i<horistas.size(); i++){
+                    if(horistas.get(i).getId() == id){
+                        horistas.remove(i);
+                        return 0;
+                    }
+                }
+            case 3:
+                for(int i = 0; i<comissionados.size(); i++){
+                    System.out.println("Id: "+comissionados.get(i).getId()+" Nome: "+comissionados.get(i).getNome());
+                }
+                System.out.println("Digite o id do empregado a ser removido:");
+                id = leitor.nextInt();
+                leitor.nextLine();
+                for(int i = 0; i<comissionados.size(); i++){
+                    if(comissionados.get(i).getId() == id){
+                        comissionados.remove(i);
+                        return 0;
+                    }
+                }
+                break;
+            case 4:
+                return 2;
+            default:
+                limpaTela();
+                System.out.println("Escolha um tipo válido!");
+                return 1;
+        }
+        return 0;
+    }
+    
+    public static int lancarCartao(Horista horista){
+        SimpleDateFormat conversor = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String horario;
+        if(horista.isEntrou()){
+            System.out.println("Digite o horario de saída: (DD/MM/AAAA HH:MM)");
+            horario = leitor.nextLine();
+            try {
+                horista.setSaida(conversor.parse(horario));
+            } catch (ParseException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                return 1;
+            }
+        }else{
+            System.out.println("Digite o horario de entrada: (DD/MM/AAAA HH:MM)");
+            horario = leitor.nextLine();
+            try {
+                horista.setEntrada(conversor.parse(horario));
+            } catch (ParseException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                return 1;
+            }
+        }
+        return 0;
+    }
+    
+    public static int lancarVenda(){
+        
         return 0;
     }
     
@@ -82,15 +175,49 @@ public class Main {
         System.out.println("10- Criação de Novas Agendas de Pagamento");
         int escolha = leitor.nextInt();
         leitor.nextLine();
+        int resultado;
         switch(escolha){
             case 1:
-                adcionarEmpregado();
+                resultado = adcionarEmpregado();
+                if(resultado== 0){
+                    System.out.println("Empregado adcionado com sucesso!");
+                }else if(resultado == 2){
+                    System.out.println("Cancelado!");
+                }else{
+                    System.out.println("Houve algum erro tente novamente!");
+                }
+                menu();
                 break;
             case 2:
+                resultado = removerEmpregado();
+                if(resultado== 0){
+                    System.out.println("Empregado removido com sucesso!");
+                }else if(resultado == 2){
+                    System.out.println("Cancelado!");
+                }else{
+                    System.out.println("Houve algum erro tente novamente!");
+                }
+                menu();
                 break;
             case 3:
+                for(int i = 0; i<horistas.size(); i++){
+                    System.out.println("Id (relativo): "+i+" id: "+horistas.get(i).getId()+" Nome: "+horistas.get(i).getNome());
+                }
+                System.out.println("Digite o id (relativo) do empregado a ser lancado o cartão:");
+                int id = leitor.nextInt();
+                leitor.nextLine();
+                resultado = lancarCartao(horistas.get(id));
+                if(resultado== 0){
+                    System.out.println("Cartão lançado com sucesso!");
+                }else if(resultado == 2){
+                    System.out.println("Cancelado!");
+                }else{
+                    System.out.println("Houve algum erro tente novamente!");
+                }
+                menu();
                 break;
             case 4:
+                
                 break;
             case 5:
                 break;

@@ -6,8 +6,14 @@ public abstract class  Empregado {
     private String endereco;
     private String tipo;
     private int metodoPagamento;/*1-Cheque pelos correios; 2-Cheque em mãos; 3-Depósito em conta bancária*/
+    
     private boolean sindicato;/*true-Empregado pertence ao sindicato; false-Empregado não pertence ao sindicato*/
+    private int idSindicato;
+    private double taxaSindical = 0;//fixa por empregado
+    private double taxaSindicato = 0;//variavel todo mês
+    
     private double salario;
+    
 
     public Empregado(int id, String nome, String endereco, int metodoPagamento, boolean sindicato, String tipo, double salario) {
         this.id = id;
@@ -63,8 +69,9 @@ public abstract class  Empregado {
         return sindicato;
     }
 
-    public void setSindicato(boolean sindicato) {
-        this.sindicato = sindicato;
+    public void setSindicato() {
+        if(this.sindicato) this.sindicato = false;
+        else this.sindicato = true;
     }
     
     public double getSalario() {
@@ -73,6 +80,30 @@ public abstract class  Empregado {
 
     public void setSalario(double salario) {
         this.salario = salario;
+    }
+
+    public double getTaxaSindicato() {
+        return taxaSindicato;
+    }
+
+    public void setTaxaSindicato(double taxaSindicato) {
+        this.taxaSindicato = taxaSindicato;
+    }
+
+    public int getIdSindicato() {
+        return idSindicato;
+    }
+
+    public void setIdSindicato(int idSindicato) {
+        this.idSindicato = idSindicato;
+    }
+
+    public double getTaxaSindical() {
+        return taxaSindical;
+    }
+
+    public void setTaxaSindical(double taxaSindical) {
+        this.taxaSindical = taxaSindical;
     }
 
 }

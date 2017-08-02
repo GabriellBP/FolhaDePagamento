@@ -1,5 +1,7 @@
 package folhadepagamento;
 
+import java.util.Date;
+
 public abstract class  Empregado {
     private int id;
     private String nome;
@@ -13,6 +15,8 @@ public abstract class  Empregado {
     private double taxaSindicato = 0;//variavel todo mês
     
     private double salario;
+    private Date ultimoPagamento;
+    private String agendaPagamento;
     
 
     public Empregado(int id, String nome, String endereco, int metodoPagamento, boolean sindicato, String tipo, double salario) {
@@ -104,6 +108,22 @@ public abstract class  Empregado {
 
     public void setTaxaSindical(double taxaSindical) {
         this.taxaSindical = taxaSindical;
+    }
+
+    public Date getUltimoPagamento() {
+        return ultimoPagamento;
+    }
+
+    public void setUltimoPagamento(Date ultimoPagamento) {
+        this.ultimoPagamento = ultimoPagamento;
+    }
+
+    public String getAgendaPagamento() {
+        return agendaPagamento;
+    }
+
+    public void setAgendaPagamento(String agendaPagamento) {
+        this.agendaPagamento = agendaPagamento;
     }
 
 }

@@ -497,6 +497,7 @@ public class Main {
         String data = leitor.nextLine();
         Date dataA = null;
         Date dataB = null;
+        int mensalDia;
         try {
              dataA = conversor2.parse(data);
         } catch (ParseException ex) {
@@ -524,7 +525,12 @@ public class Main {
                 if(cal.get(Calendar.DAY_OF_WEEK) == 6){
                     salario = (a.getSalario()/2)*((int) (diferencaDias / 14));
                 }
+            }else if(a.getAgendaPagamento().startsWith("mensal $")){
+                if(cal.equals(cal.getActualMaximum(Calendar.DAY_OF_MONTH))){
+                    salario = a.getSalario()*((int) (diferencaDias / 30));
+                }
             }
+                
             System.out.println("Id: "+a.getId()+" Nome: "+a.getNome()+" Salario: "+salario+" Forma de pagamento: "+a.getMetodoPagamento()+" (1-Cheque pelos correios; 2-Cheque em mãos; 3-Depósito em conta bancária)");
             a.setUltimoPagamento(dataA);
         }
@@ -534,34 +540,57 @@ public class Main {
             dataB = a.getUltimoPagamento();
             if(dataA.before(dataB)) continue;
             long diferencaDias = (dataA.getTime() - dataB.getTime()) / (1000*60*60*24);  
+            float totalHoras = 0, diaHoras = 0;
             if(a.getAgendaPagamento().startsWith("mensalmente")){
                 if(cal.equals(cal.getActualMaximum(Calendar.DAY_OF_MONTH))){
-                    int tamanho, totalHoras = 0;
+                    int tamanho;
                     if(a.isEntrou()) tamanho = a.getEntrada().size()- 1;
                     else tamanho = tamanho = a.getEntrada().size() ;
                     for(int i = 0; i < tamanho; i++){
-                        totalHoras += (a.getSaida().get(i).getTime() - a.getEntrada().get(i).getTime()) / (1000*60);
-                    }//falta implementar as horas extras
+                        diaHoras = (a.getSaida().get(i).getTime() - a.getEntrada().get(i).getTime()) / (1000*60);
+                        if(diaHoras > 8.0) diaHoras *= 1.5;
+                        totalHoras += diaHoras;
+                        diaHoras = 0;
+                    }
                     salario = a.getSalario()*totalHoras;
                 }
             }else if(a.getAgendaPagamento().startsWith("semanalmente")){
                 if(cal.get(Calendar.DAY_OF_WEEK) == 6){
-                    int tamanho, totalHoras = 0;
+                    int tamanho;
                     if(a.isEntrou()) tamanho = a.getEntrada().size()- 1;
                     else tamanho = tamanho = a.getEntrada().size() ;
                     for(int i = 0; i < tamanho; i++){
-                        totalHoras += (a.getSaida().get(i).getTime() - a.getEntrada().get(i).getTime()) / (1000*60);
-                    }//falta implementar as horas extras
+                        diaHoras += (a.getSaida().get(i).getTime() - a.getEntrada().get(i).getTime()) / (1000*60);
+                        if(diaHoras > 8.0) diaHoras *= 1.5;
+                        totalHoras += diaHoras;
+                        diaHoras = 0;
+                    }
                     salario = a.getSalario()*totalHoras;
                 }
             }else if(a.getAgendaPagamento().startsWith("bi-semanalmente")){
                 if(cal.get(Calendar.DAY_OF_WEEK) == 6){
-                    int tamanho, totalHoras = 0;
+                    int tamanho;
                     if(a.isEntrou()) tamanho = a.getEntrada().size()- 1;
                     else tamanho = tamanho = a.getEntrada().size() ;
                     for(int i = 0; i < tamanho; i++){
-                        totalHoras += (a.getSaida().get(i).getTime() - a.getEntrada().get(i).getTime()) / (1000*60);
-                    }//falta implementar as horas extras
+                        diaHoras += (a.getSaida().get(i).getTime() - a.getEntrada().get(i).getTime()) / (1000*60);
+                        if(diaHoras > 8.0) diaHoras *= 1.5;
+                        totalHoras += diaHoras;
+                        diaHoras = 0;
+                    }
+                    salario = a.getSalario()*totalHoras;
+                }
+            }else if(a.getAgendaPagamento().startsWith("mensal $")){
+                if(cal.equals(cal.getActualMaximum(Calendar.DAY_OF_MONTH))){
+                    int tamanho;
+                    if(a.isEntrou()) tamanho = a.getEntrada().size()- 1;
+                    else tamanho = tamanho = a.getEntrada().size() ;
+                    for(int i = 0; i < tamanho; i++){
+                        diaHoras = (a.getSaida().get(i).getTime() - a.getEntrada().get(i).getTime()) / (1000*60);
+                        if(diaHoras > 8.0) diaHoras *= 1.5;
+                        totalHoras += diaHoras;
+                        diaHoras = 0;
+                    }
                     salario = a.getSalario()*totalHoras;
                 }
             }
@@ -601,13 +630,20 @@ public class Main {
                         salario += (a.getVendas().get(i) * a.getPercentualComissao());
                     }
                 }
+            }else if(a.getAgendaPagamento().startsWith("mensal $")){
+                 if(cal.equals(cal.getActualMaximum(Calendar.DAY_OF_MONTH))){
+                    salario = a.getSalario()*((int) (diferencaDias / 30));
+                    int tamanho = a.getVendas().size();
+                    for(int i = 0; i<tamanho; i++){
+                        salario += (a.getVendas().get(i) * a.getPercentualComissao());
+                    }
+                }
             }
             System.out.println("Id: "+a.getId()+" Nome: "+a.getNome()+" Salario: "+salario+" Forma de pagamento: "+a.getMetodoPagamento()+" (1-Cheque pelos correios; 2-Cheque em mãos; 3-Depósito em conta bancária)");
             a.getVendas().clear();
             a.getDataVendas().clear();
             a.setUltimoPagamento(dataA);
         }
-        //falta fazer para as novas agendas
         System.out.println("Aperte enter para continuar!");
         leitor.nextLine();
         return 0;

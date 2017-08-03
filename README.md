@@ -12,3 +12,7 @@ Funções implementadas:
 * Undo/redo
 * Agenda de Pagamento
 * Criação de Novas Agendas de Pagamento
+
+
+
+obs.: projeto implementado usando a IDE NetBeans 8.2, com objetivo avaliativo, feito obrigatoriamente sem uso de algumas funcionalidades OO.

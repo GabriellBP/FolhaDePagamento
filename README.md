@@ -1,5 +1,4 @@
 # FolhaDePagamento
-(É necessário a instalação do Gson disponível neste repositório)
 
 Funções implementadas: 
 * Adição de um empregado
@@ -12,7 +11,8 @@ Funções implementadas:
 * Undo/redo
 * Agenda de Pagamento
 * Criação de Novas Agendas de Pagamento
+* Listar Empregados
 
 
 
-obs.: projeto implementado usando a IDE NetBeans 8.2, com objetivo avaliativo, feito obrigatoriamente sem uso de algumas funcionalidades OO.
+obs.: projeto implementado usando a IDE NetBeans 8.2, com objetivo avaliativo, feito obrigatoriamente sem uso de algumas funcionalidades OO, sem tratamento de algumas exceções e erros causados por inserções e uso indevido de funções pelo usuário.

@@ -6,4 +6,8 @@ public class Assalariado extends Empregado {
         super(id, nome, endereco, metodoPagamento, sindicato, tipo, salario);
     }
     
+    public Assalariado(Assalariado assalariado){
+        super(assalariado.getId(), assalariado.getNome(), assalariado.getEndereco(), assalariado.getMetodoPagamento(), assalariado.isSindicato(), assalariado.getTipo(), assalariado.getSalario());
+    }
+    
 }

@@ -26,17 +26,12 @@ public class Sistema {
     private SimpleDateFormat conversor2 = new SimpleDateFormat("dd/MM/yyyy");
     private List<String> agendasPagamento = new ArrayList<>();
     
-    private static Gson gson = new Gson();
-    private static Type tipoAssalariado = new TypeToken<ArrayList<Assalariado>>() {}.getType();
-    private static Type tipoHorista = new TypeToken<ArrayList<Horista>>() {}.getType();
-    private static Type tipoComissionado = new TypeToken<ArrayList<Comissionado>>() {}.getType();
-    
-    private Stack<String> undoAssalariado = new Stack<>();
-    private Stack<String> undoHorista = new Stack<>();
-    private Stack<String> undoComissionado = new Stack<>();
-    private Stack<String> redoAssalariado = new Stack<>();
-    private Stack<String> redoHorista = new Stack<>();
-    private Stack<String> redoComissionado = new Stack<>();
+    private Stack<List<Assalariado>> undoAssalariado = new Stack<>();
+    private Stack<List<Horista>> undoHorista = new Stack<>();
+    private Stack<List<Comissionado>> undoComissionado = new Stack<>();
+    private Stack<List<Assalariado>> redoAssalariado = new Stack<>();
+    private Stack<List<Horista>> redoHorista = new Stack<>();
+    private Stack<List<Comissionado>> redoComissionado = new Stack<>();
 
     public Sistema() {
         this.agendasPagamento.add("mensalmente");
@@ -171,7 +166,7 @@ public class Sistema {
                 return 1;
         }
         qtdEmpregados++;
-        inserirUndo();
+        inserirUndo(assalariados, horistas, comissionados);
         return 0;
     }
     
@@ -230,7 +225,7 @@ public class Sistema {
                     return 2;
                 }
                 comissionados.remove(id);
-                inserirUndo();
+                inserirUndo(assalariados, horistas, comissionados);
                 return 0;
                 
             case 4:
@@ -265,7 +260,7 @@ public class Sistema {
                 return 1;
             }
         }
-        inserirUndo();
+        inserirUndo(assalariados, horistas, comissionados);
         return 0;
     }
     
@@ -282,7 +277,7 @@ public class Sistema {
             
             System.out.println("Digite o valor da venda:");
             double valor = leitor.nextDouble();
-            inserirUndo();
+            inserirUndo(assalariados, horistas, comissionados);
             return 0;
         
     }
@@ -360,7 +355,7 @@ public class Sistema {
             default:
                 return 1;
         }
-        inserirUndo();
+        inserirUndo(assalariados, horistas, comissionados);
         return 0;
     }
     
@@ -584,12 +579,12 @@ public class Sistema {
             flag = leitor.nextInt();
             leitor.nextLine();
         }while(flag == 1);
-        inserirUndo();
+        inserirUndo(assalariados, horistas, comissionados);
         return 0;
     }
     
     public int folhaPagamento(){
-        inserirUndo();
+        inserirUndo(assalariados, horistas, comissionados);
         System.out.println("Digite a data a ser rodada a folha de pagamento: (DD/MM/AAAA)");
         String data = leitor.nextLine();
         Date dataA = null;
@@ -933,14 +928,28 @@ public class Sistema {
     
     public int undo(){
         if(undoAssalariado.size()>0 || undoHorista.size()>0 || undoComissionado.size() > 0) {
-            
-            redoAssalariado.push(gson.toJson(assalariados, tipoAssalariado));
-            redoHorista.push(gson.toJson(horistas, tipoHorista));
-            redoComissionado.push(gson.toJson(comissionados, tipoComissionado));
+            List<Assalariado> nListaAssalariado = new ArrayList<>();
+            List<Horista> nListaAHorista = new ArrayList<>();
+            List<Comissionado> nListaComissionado = new ArrayList<>();
 
-            assalariados = gson.fromJson(undoAssalariado.pop(), tipoAssalariado);
-            horistas = gson.fromJson(undoHorista.pop(), tipoHorista);
-            comissionados = gson.fromJson(undoComissionado.pop(), tipoComissionado);
+            for(Assalariado a : assalariados){
+                nListaAssalariado.add(a);
+            }
+            for(Comissionado a : comissionados){
+                nListaComissionado.add(a);
+            }
+            for(Horista a : horistas){
+                nListaAHorista.add(a);
+            }
+            
+            redoAssalariado.push(nListaAssalariado);
+            redoHorista.push(nListaAHorista);
+            redoComissionado.push(nListaComissionado);
+
+
+            assalariados = undoAssalariado.pop();
+            horistas = undoHorista.pop();
+            comissionados = undoComissionado.pop();
             
             return 0;
         } else return 1; 
@@ -948,22 +957,50 @@ public class Sistema {
 
     public int redo(){
         if(redoAssalariado.size() > 0 || redoHorista.size() > 0 || redoComissionado.size() > 0) {
-            undoAssalariado.push(gson.toJson(assalariados, tipoAssalariado));
-            undoHorista.push(gson.toJson(horistas, tipoHorista));
-            undoComissionado.push(gson.toJson(comissionados, tipoComissionado));
+            List<Assalariado> nListaAssalariado = new ArrayList<>();
+            List<Horista> nListaAHorista = new ArrayList<>();
+            List<Comissionado> nListaComissionado = new ArrayList<>();
 
-            assalariados = gson.fromJson(redoAssalariado.pop(), tipoAssalariado);
-            horistas = gson.fromJson(redoHorista.pop(), tipoHorista);
-            comissionados = gson.fromJson(redoComissionado.pop(), tipoComissionado);
+            for(Assalariado a : assalariados){
+                nListaAssalariado.add(a);
+            }
+            for(Comissionado a : comissionados){
+                nListaComissionado.add(a);
+            }
+            for(Horista a : horistas){
+                nListaAHorista.add(a);
+            }
+            
+            undoAssalariado.push(nListaAssalariado);
+            undoComissionado.push(nListaComissionado);
+            undoHorista.push(nListaAHorista);
+
+            assalariados = redoAssalariado.pop();
+            horistas = redoHorista.pop();
+            comissionados = redoComissionado.pop();
+            
             return 0;
         } else return 1;
         
     }
     
-    public void inserirUndo(){
-        undoAssalariado.push(gson.toJson(assalariados, tipoAssalariado));
-        undoHorista.push(gson.toJson(horistas, tipoHorista));
-        undoComissionado.push(gson.toJson(comissionados, tipoComissionado));
+    public void inserirUndo(List<Assalariado> listaAssalariado, List<Horista> listaHorista, List<Comissionado> listaComissionado){
+        List<Assalariado> nListaAssalariado = new ArrayList<>();
+        List<Horista> nListaAHorista = new ArrayList<>();
+        List<Comissionado> nListaComissionado = new ArrayList<>();
+        
+        for(Assalariado a : listaAssalariado){
+            nListaAssalariado.add(a);
+        }
+        undoAssalariado.push(nListaAssalariado);
+        for(Comissionado a : listaComissionado){
+            nListaComissionado.add(a);
+        }
+        undoComissionado.push(nListaComissionado);
+        for(Horista a : listaHorista){
+            nListaAHorista.add(a);
+        }
+        undoHorista.push(nListaAHorista);
         
         redoAssalariado = new Stack<>();
         redoHorista = new Stack<>();

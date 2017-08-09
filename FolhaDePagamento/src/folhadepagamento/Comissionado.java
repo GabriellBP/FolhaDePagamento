@@ -14,6 +14,11 @@ public class Comissionado extends Empregado {
         this.percentualComissao = percentualComissao;
     }
     
+    public Comissionado(Comissionado comissionado){
+        super(comissionado.getId(), comissionado.getNome(), comissionado.getEndereco(), comissionado.getMetodoPagamento(), comissionado.isSindicato(), comissionado.getTipo(), comissionado.getSalario());
+        this.percentualComissao =  comissionado.getPercentualComissao();
+    }
+    
     public float getPercentualComissao() {
         return percentualComissao;
     }

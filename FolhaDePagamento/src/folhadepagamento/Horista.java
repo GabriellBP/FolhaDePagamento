@@ -12,6 +12,10 @@ public class Horista extends Empregado {
     public Horista(int id, String nome, String endereco, int metodoPagamento, boolean sindicato, String tipo, double salario) {
         super(id, nome, endereco, metodoPagamento, sindicato, tipo, salario);
     }
+    
+    public Horista(Horista horista){
+        super(horista.getId(), horista.getNome(), horista.getEndereco(), horista.getMetodoPagamento(), horista.isSindicato(), horista.getTipo(), horista.getSalario());
+    }
 
     public List<Date> getEntrada() {
         return entrada;

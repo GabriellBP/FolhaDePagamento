@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
@@ -99,7 +100,7 @@ public class Sistema {
     
     /*--*/
     
-    public int adcionarEmpregado(){
+    public int adcionarEmpregado() throws InputMismatchException {
         limpaTela();
         System.out.println("Digite o nome do empregado:");
         String nome = leitor.nextLine();
@@ -170,7 +171,7 @@ public class Sistema {
         return 0;
     }
     
-    public int removerEmpregado(){
+    public int removerEmpregado() throws InputMismatchException {
         limpaTela();
         System.out.println("Digite o tipo do empregado:\n1-Assalariado;\n2- Horista\n3-Comissionado:\n4-Cancelar");
         int tipo = leitor.nextInt();
@@ -237,7 +238,7 @@ public class Sistema {
         }
     }
     
-    public int lancarCartao(Horista horista){
+    public int lancarCartao(Horista horista) throws InputMismatchException {
         String horario;
         if(horista.isEntrou()){
             horista.setEntrou(false);
@@ -256,7 +257,9 @@ public class Sistema {
             try {
                 horista.setEntrada(conversor.parse(horario));
             } catch (ParseException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Erro quanto a data!");
+                System.out.println(ex.getMessage());
+                //Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
                 return 1;
             }
         }
@@ -264,7 +267,7 @@ public class Sistema {
         return 0;
     }
     
-    public int lancarVenda(Comissionado comissionado){
+    public int lancarVenda(Comissionado comissionado) throws InputMismatchException {
             System.out.println("Digite a data da venda: (DD/MM/AAAA HH:MM)");
             String dataVenda = leitor.nextLine();
             
@@ -277,11 +280,12 @@ public class Sistema {
             
             System.out.println("Digite o valor da venda:");
             double valor = leitor.nextDouble();
+            leitor.nextLine();
             inserirUndo(assalariados, horistas, comissionados);
             return 0;
         
     }
-    public int lancarTaxaServico(){
+    public int lancarTaxaServico() throws InputMismatchException {
         if(horistas.isEmpty() && assalariados.isEmpty() && comissionados.isEmpty()){
             System.out.println("Nenhum empregado cadastrado!");
             return 2;
@@ -359,7 +363,7 @@ public class Sistema {
         return 0;
     }
     
-    public int editarEmpregado(){
+    public int editarEmpregado() throws InputMismatchException {
         if(horistas.isEmpty() && assalariados.isEmpty() && comissionados.isEmpty()){
             System.out.println("Nenhum Empregado cadastrado!");
             return 2;
@@ -583,7 +587,7 @@ public class Sistema {
         return 0;
     }
     
-    public int folhaPagamento(){
+    public int folhaPagamento() throws InputMismatchException {
         inserirUndo(assalariados, horistas, comissionados);
         System.out.println("Digite a data a ser rodada a folha de pagamento: (DD/MM/AAAA)");
         String data = leitor.nextLine();
@@ -885,7 +889,7 @@ public class Sistema {
         return 0;
     }
     
-    public void agendaDePagamento(){//sem tratamento de erros
+    public void agendaDePagamento() throws InputMismatchException {
         System.out.println("Empregados:");
         mostrarAssalariados();
         mostrarHoristas();
@@ -915,7 +919,7 @@ public class Sistema {
         
     }
     
-    public void criarNovaAgenda(){
+    public void criarNovaAgenda() throws InputMismatchException {
         System.out.println("Digite a nova agenda de pagamento:");
         System.out.println("Formatos aceitos:");
         System.out.println("mensal x (x é um inteiro representando o dia do mes)");
